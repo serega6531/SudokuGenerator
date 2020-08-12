@@ -5,26 +5,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static ru.serega6531.Field.ROW_SIZE;
-
 public class SudokuGenerator {
 
     public static void main(String[] args) {
-        Field field = new SudokuGenerator().generate();
+        Field field = new SudokuGenerator().generate(new FieldParameters(9));
         field.print();
     }
 
-    public Field generate() {
-        Field field = new Field();
+    public Field generate(FieldParameters parameters) {
+        Field field = new Field(parameters);
         return step(0, field);
     }
 
     public Field step(int num, Field field) {
         FlatFieldAccessor flat = field.getFlat();
 
-        List<Integer> numbers = IntStream.iterate(1, i -> i <= ROW_SIZE, i -> i + 1)
+        List<Integer> numbers = IntStream.iterate(1, i -> i <= field.getParameters().getRowSize(), i -> i + 1)
                 .boxed()
                 .collect(Collectors.toList());
+        numbers.removeAll(field.getRow(flat.transformToRow(num)).getAllSet());
+        numbers.removeAll(field.getColumn(flat.transformToColumn(num)).getAllSet());
         Collections.shuffle(numbers);
 
         // if all numbers are wrong, we must go one iteration back
@@ -33,7 +33,7 @@ public class SudokuGenerator {
 
             if (field.validate()) {
                 // if field is valid, try one iteration deeper, unless we hit the end
-                if (num == Field.FIELD_SIZE - 1) {
+                if (num == field.getParameters().getFieldSize() - 1) {
                     return field;
                 } else {
                     Field newField = step(num + 1, field);
@@ -42,7 +42,7 @@ public class SudokuGenerator {
                     }
 
                     // clear the field after current position
-                    for (int i = num + 1; i < Field.ROW_SIZE * Field.ROW_SIZE; i++) {
+                    for (int i = num + 1; i < field.getParameters().getFieldSize() && flat.get(i) != Field.UNSET; i++) {
                         flat.set(i, Field.UNSET);
                     }
                 }

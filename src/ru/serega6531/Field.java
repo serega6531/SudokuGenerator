@@ -5,24 +5,28 @@ import java.util.Set;
 
 public class Field {
 
-    public static final int ROW_SIZE = 9;
-    public static final int FIELD_SIZE = ROW_SIZE * ROW_SIZE;
-    public static final int BOX_SIZE = 3;
+//    public static final int parameters.getRowSize() = 16;
+//    public static final int FIELD_SIZE = parameters.getRowSize() * parameters.getRowSize();
+//    public static final int parameters.getBoxSize() = (int) Math.sqrt(parameters.getRowSize());
+
+    private final FieldParameters parameters;
 
     public static final int UNSET = -1;
 
     private final int[][] data;
     private final FlatFieldAccessor flatFieldAccessor = new FlatFieldAccessor(this);
 
-    public Field(int[][] data) {
+    public Field(int[][] data, FieldParameters parameters) {
         this.data = data;
+        this.parameters = parameters;
     }
 
-    public Field() {
-        this.data = new int[ROW_SIZE][ROW_SIZE];
+    public Field(FieldParameters parameters) {
+        this.data = new int[parameters.getRowSize()][parameters.getRowSize()];
+        this.parameters = parameters;
 
-        for (int row = 0; row < ROW_SIZE; row++) {
-            for (int column = 0; column < ROW_SIZE; column++) {
+        for (int row = 0; row < parameters.getRowSize(); row++) {
+            for (int column = 0; column < parameters.getRowSize(); column++) {
                 data[row][column] = UNSET;
             }
         }
@@ -46,28 +50,28 @@ public class Field {
     }
 
     public boolean validate() {
-        for (int row = 0; row < data.length; row++) {
+        for (int row = 0; row < parameters.getRowSize(); row++) {
             if (!getRow(row).isUnique()) {
                 return false;
             }
         }
 
-        for (int column = 0; column < data.length; column++) {
+        for (int column = 0; column < parameters.getRowSize(); column++) {
             if (!getColumn(column).isUnique()) {
                 return false;
             }
         }
 
         // validate numbers in boxes (3x3)
-        for (int xBoxNum = 0; xBoxNum < ROW_SIZE / BOX_SIZE; xBoxNum++) {
-            for (int yBoxNum = 0; yBoxNum < ROW_SIZE / BOX_SIZE; yBoxNum++) {
-                int x = xBoxNum * BOX_SIZE;
-                int y = yBoxNum * BOX_SIZE;
+        for (int xBoxNum = 0; xBoxNum < parameters.getRowSize() / parameters.getBoxSize(); xBoxNum++) {
+            for (int yBoxNum = 0; yBoxNum < parameters.getRowSize() / parameters.getBoxSize(); yBoxNum++) {
+                int x = xBoxNum * parameters.getBoxSize();
+                int y = yBoxNum * parameters.getBoxSize();
 
                 Set<Integer> set = new HashSet<>();
 
-                for (int row = 0; row < BOX_SIZE; row++) {
-                    for (int column = 0; column < BOX_SIZE; column++) {
+                for (int row = 0; row < parameters.getBoxSize(); row++) {
+                    for (int column = 0; column < parameters.getBoxSize(); column++) {
                         int val = get(x + row, y + column);
                         if (val != UNSET && !set.add(val)) {
                             return false;
@@ -92,8 +96,12 @@ public class Field {
         return flatFieldAccessor;
     }
 
+    public FieldParameters getParameters() {
+        return parameters;
+    }
+
     public Field copy() {
-        return new Field(data);
+        return new Field(data, parameters);
     }
 
 }

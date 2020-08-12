@@ -1,9 +1,9 @@
 package ru.serega6531;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-import static ru.serega6531.Field.ROW_SIZE;
 
 public abstract class FieldAccessor {
 
@@ -11,9 +11,7 @@ public abstract class FieldAccessor {
 
     public abstract void set(int num, int value);
 
-    public int getSize() {
-        return ROW_SIZE;
-    }
+    public abstract int getSize();
 
     public int[] getAll() {
         int[] result = new int[getSize()];
@@ -21,6 +19,20 @@ public abstract class FieldAccessor {
             result[i] = get(i);
         }
         return result;
+    }
+
+    public List<Integer> getAllSet() {
+        List<Integer> list = new ArrayList<>();
+
+        for (int i = 0; i < getSize(); i++) {
+            int val = get(i);
+            if (val == Field.UNSET) {
+                break;
+            }
+            list.add(val);
+        }
+
+        return list;
     }
 
     public boolean isUnique() {

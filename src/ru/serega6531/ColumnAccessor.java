@@ -10,6 +10,11 @@ public class ColumnAccessor extends FieldAccessor {
         this.column = column;
     }
 
+    @Override
+    public int getSize() {
+        return field.getParameters().getRowSize();
+    }
+
     public int get(int row) {
         return field.get(row, column);
     }

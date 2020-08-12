@@ -10,22 +10,30 @@ public class FlatFieldAccessor extends FieldAccessor {
 
     @Override
     public int getSize() {
-        return Field.ROW_SIZE * Field.ROW_SIZE;
+        return field.getParameters().getRowSize() * field.getParameters().getRowSize();
     }
 
     public int get(int num) {
-        int row = num / Field.ROW_SIZE;
-        int column = num % Field.ROW_SIZE;
+        int row = transformToRow(num);
+        int column = transformToColumn(num);
 
         return field.get(row, column);
     }
 
     @Override
     public void set(int num, int value) {
-        int row = num / Field.ROW_SIZE;
-        int column = num % Field.ROW_SIZE;
+        int row = num / field.getParameters().getRowSize();
+        int column = num % field.getParameters().getRowSize();
 
         field.set(row, column, value);
+    }
+
+    public int transformToRow(int num) {
+        return num / field.getParameters().getRowSize();
+    }
+
+    public int transformToColumn(int num) {
+        return num % field.getParameters().getRowSize();
     }
 
 }
