@@ -5,10 +5,6 @@ import java.util.Set;
 
 public class Field {
 
-//    public static final int parameters.getRowSize() = 16;
-//    public static final int FIELD_SIZE = parameters.getRowSize() * parameters.getRowSize();
-//    public static final int parameters.getBoxSize() = (int) Math.sqrt(parameters.getRowSize());
-
     private final FieldParameters parameters;
 
     public static final int UNSET = -1;
@@ -43,7 +39,7 @@ public class Field {
     public void print() {
         for (int[] row : data) {
             for (int i : row) {
-                System.out.print(i + " ");
+                System.out.print(((char) ('a' + i - 1)) + " ");
             }
             System.out.println();
         }
