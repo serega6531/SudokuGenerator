@@ -1,4 +1,6 @@
-package ru.serega6531;
+package ru.serega6531.accessor;
+
+import ru.serega6531.Field;
 
 public class RowAccessor extends FieldAccessor {
 

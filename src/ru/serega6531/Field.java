@@ -1,5 +1,10 @@
 package ru.serega6531;
 
+import ru.serega6531.accessor.BoxAccessor;
+import ru.serega6531.accessor.ColumnAccessor;
+import ru.serega6531.accessor.FlatFieldAccessor;
+import ru.serega6531.accessor.RowAccessor;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,6 +45,7 @@ public class Field {
         for (int[] row : data) {
             for (int i : row) {
                 System.out.print(((char) ('a' + i - 1)) + " ");
+//                System.out.print(i + " ");
             }
             System.out.println();
         }
@@ -80,12 +86,26 @@ public class Field {
         return true;
     }
 
+    public Set<Integer> getImpossibleNumbers(int row, int column) {
+        Set<Integer> set = new HashSet<>();
+
+        set.addAll(getRow(row).getAllSet());
+        set.addAll(getColumn(column).getAllSet());
+        set.addAll(getBox(row, column).getAllSet());
+
+        return set;
+    }
+
     public RowAccessor getRow(int row) {
         return new RowAccessor(this, row);
     }
 
     public ColumnAccessor getColumn(int column) {
         return new ColumnAccessor(this, column);
+    }
+
+    public BoxAccessor getBox(int row, int column) {
+        return new BoxAccessor(this, parameters, row, column);
     }
 
     public FlatFieldAccessor getFlat() {

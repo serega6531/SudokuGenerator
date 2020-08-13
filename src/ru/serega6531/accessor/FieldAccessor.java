@@ -1,4 +1,6 @@
-package ru.serega6531;
+package ru.serega6531.accessor;
+
+import ru.serega6531.Field;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,8 +23,8 @@ public abstract class FieldAccessor {
         return result;
     }
 
-    public List<Integer> getAllSet() {
-        List<Integer> list = new ArrayList<>();
+    public Set<Integer> getAllSet() {
+        Set<Integer> list = new HashSet<>();
 
         for (int i = 0; i < getSize(); i++) {
             int val = get(i);
